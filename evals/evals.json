@@ -1,1 +1,99 @@
-
+{
+  "skill_name": "platform-product-manager",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm building an enterprise SaaS project management platform from scratch. We have two user types: workspace admins (who set up the environment, manage permissions, invite users) and project members (who create tasks, track progress, collaborate). Help me design the full platform architecture — I need to understand the key capabilities at each layer, how the admin and member journeys interact, and where the biggest design risks are for a zero-to-one launch.",
+      "expected_output": "A structured platform architecture covering all 5 layers (data, logic, API, application, observability), a capability map, dual-role journey interaction analysis, and zero-to-one risk callouts.",
+      "assertions": [
+        {
+          "name": "covers_five_layers",
+          "description": "Response explicitly addresses all five architectural layers: data, business logic, API/integration, application, and observability",
+          "type": "llm_judge"
+        },
+        {
+          "name": "capability_map_present",
+          "description": "Response includes a capability map or table that assigns capabilities to layers",
+          "type": "llm_judge"
+        },
+        {
+          "name": "cross_role_dependencies",
+          "description": "Response identifies where the admin journey and member journey depend on each other or create blocking points",
+          "type": "llm_judge"
+        },
+        {
+          "name": "zero_to_one_guidance",
+          "description": "Response includes concrete zero-to-one scoping advice or a launch checklist",
+          "type": "llm_judge"
+        }
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "We just launched our B2B analytics platform 3 months ago. We have about 80 enterprise customers and we're seeing good activation but poor retention — users log in during onboarding week but drop off after that. I need to design an event tracking plan and analytics framework to understand exactly where retention is breaking down. What events should we track, what dimensions should we analyze by, and how should I define our North Star Metric?",
+      "expected_output": "A practical event tracking plan with event names, triggers, and properties; analytics dimensions organized by category; a North Star Metric recommendation with decomposition tree; and data validation steps.",
+      "assertions": [
+        {
+          "name": "event_tracking_plan",
+          "description": "Response includes a concrete event tracking plan with event names, triggers, and key properties",
+          "type": "llm_judge"
+        },
+        {
+          "name": "event_naming_convention",
+          "description": "Event names follow noun_verb convention (e.g., report_viewed, dashboard_created)",
+          "type": "llm_judge"
+        },
+        {
+          "name": "nsm_with_decomposition",
+          "description": "Response recommends a specific North Star Metric and breaks it down into acquisition, activation, retention, and expansion sub-metrics",
+          "type": "llm_judge"
+        },
+        {
+          "name": "retention_focus",
+          "description": "The tracking plan specifically addresses the retention problem described — not just generic tracking advice",
+          "type": "llm_judge"
+        }
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I need to write a PRD for a new 'Role-Based Access Control' feature on our enterprise SaaS platform. Right now everyone on a tenant has the same permissions, but enterprise buyers keep asking for admin vs. editor vs. viewer roles before they'll sign contracts. This is blocking deals. The PM who was leading this just left the company, so I'm picking it up and need to write something the engineering team can actually work from. Can you help me write a complete PRD?",
+      "expected_output": "A complete PRD covering problem statement, north star connection, target users with role definitions, scoped requirements, data model impact, API changes, open questions, and success metrics.",
+      "assertions": [
+        {
+          "name": "complete_prd_structure",
+          "description": "PRD includes all major sections: problem statement, scope, user stories or functional requirements, data model impact, and success metrics",
+          "type": "llm_judge"
+        },
+        {
+          "name": "testable_requirements",
+          "description": "Functional requirements are specific and testable — not vague like 'users should be able to manage permissions'",
+          "type": "llm_judge"
+        },
+        {
+          "name": "role_definitions",
+          "description": "PRD clearly defines what admin, editor, and viewer roles can and cannot do",
+          "type": "llm_judge"
+        },
+        {
+          "name": "data_model_addressed",
+          "description": "PRD addresses how the data model needs to change to support RBAC (new entities, fields, or relationships)",
+          "type": "llm_judge"
+        },
+        {
+          "name": "out_of_scope_explicit",
+          "description": "PRD explicitly states what is out of scope for this version",
+          "type": "llm_judge"
+        },
+        {
+          "name": "qa_testing_impact",
+          "description": "PRD includes a section or callout specifically highlighting what QA/testing teams need to pay attention to — covering high-risk surfaces, regression scope, or specific edge cases introduced by the change",
+          "type": "llm_judge"
+        }
+      ],
+      "files": []
+    }
+  ]
+}
