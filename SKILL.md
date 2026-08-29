@@ -1,6 +1,6 @@
 ---
 name: platform-product-manager
-description: "Use this skill for platform product management challenges in B2B or enterprise SaaS contexts. Invoke it when someone needs help thinking through: how platform capabilities should be structured across architecture layers; writing PRDs for platform features like permissions, multi-tenancy, or APIs; mapping user journeys for multi-role platforms (admins, members, guests); zero-to-one platform design or one-to-ten scaling strategy; event tracking schemas, north star metrics, or post-launch analytics for a platform product. Trigger for any request involving platform product design, platform architecture, platform PM work, or platform product strategy — even if the user doesn't say 'platform' but describes a multi-tenant, multi-role, or layered product problem."
+description: "Use this skill for platform product management challenges in B2B or enterprise SaaS contexts. Invoke it when someone needs help thinking through: how platform capabilities should be structured across architecture layers; writing PRDs for platform features like permissions, multi-tenancy, or APIs; mapping user journeys for multi-role platforms (admins, members, guests); zero-to-one platform design or one-to-ten scaling strategy; event tracking schemas, north star metrics, or post-launch analytics for a platform product; designing or generating operational dashboards, monitoring views, or data cockpits for a platform. Trigger for any request involving platform product design, platform architecture, platform PM work, or platform product strategy — even if the user doesn't say 'platform' but describes a multi-tenant, multi-role, or layered product problem, or asks for a dashboard / monitoring view / 数据大盘 / 驾驶舱 for an operational product."
 ---
 
 # Platform Product Manager
@@ -283,6 +283,88 @@ Key principle: **measure the right level.** An end user's satisfaction with a sp
 
 ---
 
+## Operational Dashboards and Monitoring Views
+
+Platform PMs are constantly asked to design "a dashboard" — an ops cockpit for leadership, a monitoring wall for the ops team, a real-time control view for a business owner. Most PMs jump straight to "which charts do I put on it," and the result is a pretty screen nobody actually uses to make decisions.
+
+A good dashboard is not a collection of charts. It is an answer to a specific question that a specific person asks on a recurring basis. Design it the same way you design event tracking: **work backwards from the decision, not forwards from the data you happen to have.**
+
+### Before generating any dashboard, establish four things
+
+1. **Who is the viewer, and what decision do they make?** An executive scanning for anomalies in 20 seconds needs a different dashboard from an ops analyst diagnosing a specific drop. Name the role and the recurring decision explicitly.
+2. **What is the one number that matters most?** Every dashboard has a primary metric that earns the most visual weight (top-left, largest). If everything is emphasized, nothing is.
+3. **What does "something is wrong" look like?** A dashboard that can't surface an anomaly is just a report. Define the thresholds and the alert state up front.
+4. **What is the time granularity and refresh expectation?** Real-time monitoring, daily ops review, and monthly business review are three different products.
+
+If the user hasn't given you enough to answer these, ask one clarifying question before generating — a dashboard built on the wrong viewer assumption is wasted work.
+
+### The dashboard information hierarchy
+
+Lay out every operational dashboard in three tiers, top to bottom. This mirrors how the viewer's attention actually moves:
+
+- **Tier 1 — Pulse (top strip):** The 3–5 KPIs that answer "is everything OK right now?" Large numbers, each with a comparison delta (vs. last period) and a health color. Plus a single alert strip that only appears when a threshold is breached.
+- **Tier 2 — Trends (middle):** Time-series and comparison charts that answer "how did we get here, and where is this going?" Line charts for trends over time, grouped bars for period-over-period or segment comparison.
+- **Tier 3 — Breakdown (bottom):** The ranked tables and funnels that answer "where specifically is the problem?" This is where a viewer who spotted an anomaly in Tier 1 drills in to find the cause.
+
+The discipline is that a viewer should be able to stop at any tier. Tier 1 alone tells them if they need to keep looking.
+
+### Choosing the right visual for the job
+
+| The question | The visual |
+|---|---|
+| What's the current state of a key number? | KPI card with delta + health color |
+| How is a metric changing over time? | Line chart (trend) |
+| How do segments compare (this period vs. last, category vs. category)? | Grouped bar chart |
+| Where do users drop off in a sequence? | Funnel |
+| Which entities are healthiest / at risk? | Ranked table with a health badge column |
+| How is a whole composed of parts? | Stacked bar (avoid pie charts beyond 3 slices) |
+| Is a value in or out of an acceptable range? | Threshold/gauge with a color band |
+
+Match the visual to the question. A trend forced into a bar chart, or a comparison forced into a line, makes the viewer work harder than they should.
+
+### Health signaling
+
+Operational dashboards live or die on whether the viewer can tell "fine" from "not fine" at a glance. Encode health consistently:
+
+- **Green** — within the expected range, no action needed
+- **Amber** — approaching a threshold or trending the wrong way; watch it
+- **Red** — threshold breached; act now
+
+Never rely on color alone (accessibility, and it photographs badly in screenshots). Pair every health color with a number, a delta arrow, or a text label.
+
+### Generating the dashboard
+
+When the user wants an actual rendered dashboard (not just a spec), produce a **self-contained HTML file** with a dark ops-console aesthetic, using a charting library (Chart.js or similar via CDN) for the time-series and comparison charts, and hand-built HTML/CSS for KPI cards, tables, and funnels.
+
+Default structure to generate:
+
+```
+[Header: dashboard name + viewer context + timestamp + live indicator]
+[Alert strip: conditional — only shown when a threshold is breached]
+[Tier 1 — KPI row: 3–5 cards, each with value, delta, health color]
+[Tier 2 — two charts side by side: one trend line, one comparison bar]
+[Tier 3 — a ranked health table + a secondary panel (funnel / ROI list / breakdown)]
+```
+
+Rules for the generated artifact:
+
+- **Use realistic placeholder data** that tells a coherent story — including at least one metric in an alert/unhealthy state, so the viewer can see what "something is wrong" looks like. A dashboard where everything is green teaches the viewer nothing.
+- **Make the numbers internally consistent.** If a funnel starts at 12M impressions and the KPI card says GMV is $2.7M, those should be reconcilable. Incoherent demo data destroys credibility.
+- **Label every axis and give every chart a title** that states what question it answers.
+- **Keep it to one screen where possible.** If it scrolls forever, the hierarchy is wrong — cut Tier 3 detail, don't shrink Tier 1.
+
+Always tell the user which placeholder assumptions you made (viewer, primary metric, thresholds) so they can correct them — the layout is reusable, but the metric choices must match their real business.
+
+### Common dashboard pitfalls to avoid
+
+- **Vanity metrics up top:** Total registered users is a vanity number; weekly active tenants is a decision number. Tier 1 real estate is expensive — spend it on metrics someone acts on.
+- **No baseline for comparison:** A number without a "vs. what" is noise. Every KPI needs a comparison (previous period, target, or benchmark).
+- **Everything at the same visual weight:** If the primary metric doesn't dominate, the viewer doesn't know where to look first.
+- **No alert state:** A dashboard that looks identical whether things are fine or on fire is a report, not a monitoring tool.
+- **Chart junk:** 3D effects, gradients that don't encode data, more than ~6 series on one chart. Every pixel should carry information.
+
+---
+
 ## Output Formats
 
 When producing deliverables, default to these formats unless the user asks for something different:
@@ -297,6 +379,7 @@ When producing deliverables, default to these formats unless the user asks for s
 | Analytics dimensions | Grouped list by dimension category |
 | NSM framework | Decomposition tree |
 | Survey design | Question list with type, scale, and trigger condition |
+| Operational dashboard | Self-contained HTML with three-tier hierarchy (KPI pulse / trend charts / breakdown tables), or a spec listing viewer, primary metric, thresholds, and per-tier contents |
 
 Always produce clean, structured output that a PM could paste directly into Notion, Confluence, or a PRD doc with minimal editing.
 
