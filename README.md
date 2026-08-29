@@ -103,7 +103,7 @@ Open an issue if there's a capability you'd want prioritized.
 
 I'm Iris, a product manager transitioning from platform PM into AI PM. This Skill is my attempt to turn years of B2B product judgment, hard-won lessons, and frameworks into something reusable.
 
-I share B2B / Platform PM thinking and this Skill's changelog on Xiaohongshu (小红书): **@Iris在纽约**
+I share B2B / Platform PM thinking and this Skill's changelog on **https://www.irisluan.com/**
 
 ---
 
@@ -221,7 +221,7 @@ MIT — use it freely, no need to credit. If it's useful to you, a ⭐ star is t
 
 我是 Iris，一个正在从平台 PM 转向 AI PM 的产品经理。这个 Skill 是我把自己这些年做 B端产品的判断框架、踩坑记录、方法论整理出来的产物。
 
-我在小红书持续分享 B端 / Platform PM 的实战思考和这个 Skill 的迭代日志，欢迎来找我玩：**小红书 @Iris在纽约**
+我在个人网站上持续分享 B端 / Platform PM 的实战思考和这个 Skill 的迭代日志，欢迎来找我玩：**https://www.irisluan.com/**
 
 ---
 
